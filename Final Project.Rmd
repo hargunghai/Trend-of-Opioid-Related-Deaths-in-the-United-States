@@ -1,0 +1,57 @@
+---
+title: "Final Project: Assesing Opiod Deaths Over Time"
+output: html_document
+date: "2023-12-18"
+
+---
+#### Author: Hargun Ghai
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(tidyr)
+library(readr)
+data <- read_csv("raw_data.csv")
+data <- separate(data, raw_data, into = c("Location", "1999__Opioid Overdose Deaths", "2000__Opioid Overdose Deaths", "2001__Opioid Overdose Deaths", "2002__Opioid Overdose Deaths", "2003__Opioid Overdose Deaths", "2004__Opioid Overdose Deaths", "2005__Opioid Overdose Deaths", "2006__Opioid Overdose Deaths", "2007__Opioid Overdose Deaths", "2008__Opioid Overdose Deaths", "2009__Opioid Overdose Deaths", "2010__Opioid Overdose Deaths", "2011__Opioid Overdose Deaths", "2012__Opioid Overdose Deaths", "2013__Opioid Overdose Deaths", "2014__Opioid Overdose Deaths", "2015__Opioid Overdose Deaths", "2016__Opioid Overdose Deaths", "2017__Opioid Overdose Deaths", "2018__Opioid Overdose Deaths", "2019__Opioid Overdose Deaths", "2020__Opioid Overdose Deaths", "2021__Opioid Overdose Deaths"), sep = ",")
+
+
+data <- data[-c(54:64), ]
+data[, 2:24] <- lapply(data[, 2:24], as.character)
+
+# Replace values for Wyoming
+data[53, 2:24] <- list("NSD", "10", "NSD", "17", "NSD", "12", "10", "14", "25", "40", "32", "47", "43", "45", "48", "54", "46", "50", "47", "40", "47", "60", "71")
+data[, 2:24] <- lapply(data[, 2:24], function(x) ifelse(x == "NSD", NA, as.numeric(x)))
+data <- data[-1, ]
+
+row_index <- 1
+data[row_index, ] <- ifelse(is.na(data[row_index, ]), c(68630, 80411), data[row_index, ])
+
+
+```
+
+```{r}
+numeric_data <- data[, sapply(data, is.numeric)]
+row_averages <- rowMeans(numeric_data, na.rm = TRUE)
+result <- data.frame(State = data$Location, AverageValue = row_averages)
+
+result <- result[order(-result$AverageValue),]
+
+print(result)
+
+row_averages <- row_averages[-1]
+
+```
+
+```{r}
+# Assuming 'usa_data' is your vector of opioid overdose deaths
+usa_data <- as.numeric(data[1, -1]) 
+
+years <- seq(1999, 2021)
+
+# Plotting the trend graph
+plot(years, usa_data, type = "b", main = "Opioid Overdose Deaths in the USA (1999-2021)", xlab = "Year", ylab = "Deaths", col = "purple", pch = 16)
+
+```
+
