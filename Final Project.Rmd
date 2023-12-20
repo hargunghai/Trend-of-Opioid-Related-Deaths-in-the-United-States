@@ -1,5 +1,5 @@
 ---
-title: "Final Project: Assesing Opiod Deaths Over Time"
+title: "Final Project: Assessing Opioid Deaths Over Time"
 output: html_document
 date: "2023-12-18"
 
@@ -45,12 +45,10 @@ row_averages <- row_averages[-1]
 ```
 
 ```{r}
-# Assuming 'usa_data' is your vector of opioid overdose deaths
 usa_data <- as.numeric(data[1, -1]) 
 
 years <- seq(1999, 2021)
 
-# Plotting the trend graph
 plot(years, usa_data, type = "b", main = "Opioid Overdose Deaths in the USA (1999-2021)", xlab = "Year", ylab = "Deaths", col = "purple", pch = 16)
 
 ```
